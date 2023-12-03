@@ -6,7 +6,6 @@ import android.location.Location
 import android.location.LocationManager
 import android.os.Build
 import android.os.Looper
-import androidx.annotation.RequiresApi
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -17,19 +16,19 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 
 class DefaultLocationClient(
-    private val contex: Context,
+    private val context: Context,
     private val client: FusedLocationProviderClient
 ) : LocationClient {
     @SuppressLint("MissingPermission")
     override fun getLocationUpdate(interval: Long): Flow<Location> {
         return callbackFlow {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                !contex.hasLocationPermission()
+                !context.hasLocationPermission()
             ) {
                 throw LocationClient.LocationException("Missing Location Permission")
             }
             val locationManager =
-                contex.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
             val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
             val isNetworkEnable =
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
